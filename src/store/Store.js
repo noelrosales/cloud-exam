@@ -81,6 +81,10 @@ class Store extends Component {
             this.setState({
                 total: this.state.total - 20.00
             })
+
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -1,8 +1,20 @@
-import React,{useContext} from 'react'
+import React,{useState, useContext} from 'react'
 import { Context } from '../context/Context';
 
 const Computation = () => {
     const store = useContext(Context);
+    const [voucher, setVoucher] = useState('');
+    const [discounted, setDiscounted] = useState(false);
+    const [error, setError] = useState('');
+
+    const applyVoucher = () => {
+        const valid = store.applyVoucher(voucher);
+        if(!valid){
+           setError('Invalid voucher code or check if you have 100.00 or more worth of purchase'); 
+        } else {
+            setDiscounted(true);
+        }
+    }
 
     return (
         <div>
@@ -39,12 +51,26 @@ const Computation = () => {
                 </table>
               </div>
               <div className="card-footer">
-                  <div className="form-group">
-                    <label>VOUCHER</label>
-                    <input type="text" className="form-control" aria-describedby="helpId" />
-                    <button type="button" class="btn btn-primary">APPLY VOUCEHR</button>
-                    <small className="form-text text-muted">Put you VOUCHER here for discounts</small>
-                  </div>
+                  {
+                      !discounted ? (
+                        <div className="form-group">
+                            <label>VOUCHER</label>
+                            <input 
+                                type="text" 
+                                onChange={(e) => setVoucher(e.target.value)} 
+                                className="form-control" 
+                                aria-describedby="helpId"/>
+                            <button 
+                                type="button" 
+                                onClick={() => applyVoucher()} 
+                                class="btn btn-primary">APPLY VOUCEHR</button>
+                            <small className="form-text text-danger">{error}</small>
+                        </div>
+                      ) : (
+                        <small className="form-text text-success">Voucher Successfully Applied</small>
+                      )
+                  }
+                  
                 <h6>Total:</h6>
                 <h4>£ {store.total.toFixed(2)}</h4>
               </div>
